@@ -1,7 +1,16 @@
 {
   "profiles": {
-    "TelephonyParser.EwsdParser": {
-      "commandName": "Project"
+    "TelephonyParser.EwsdParser.Production": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Production"
+      }
+    },
+    "TelephonyParser.EwsdParser.Development": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
     },
     "WSL": {
       "commandName": "WSL2",

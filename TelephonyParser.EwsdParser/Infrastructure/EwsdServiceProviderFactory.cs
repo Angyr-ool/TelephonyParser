@@ -8,6 +8,7 @@ public class EwsdServiceProviderFactory : IServiceProviderFactory<ContainerBuild
 {
     public ContainerBuilder CreateBuilder(IServiceCollection services)
     {
+        services.AddLogging();
         var builder = new ContainerBuilder();
         builder.Populate(services);
         return builder;

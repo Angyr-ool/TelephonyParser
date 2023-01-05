@@ -10,12 +10,14 @@ public class EwsdParserHostedService : IHostedService
 {
     private readonly ILogger<EwsdParserHostedService> _logger;
     private readonly IDateTimeContext _dateTimeContext;
+    private readonly EwsdSettings _settings;
 
     public EwsdParserHostedService(ILogger<EwsdParserHostedService> logger, IDateTimeContext dateTimeContext, 
-        IHostApplicationLifetime appLifetime)
+        IHostApplicationLifetime appLifetime, EwsdSettings settings)
     {
         _logger = logger;
         _dateTimeContext = dateTimeContext;
+        _settings = settings;
 
         appLifetime.ApplicationStopping.Register(OnStopping);
         appLifetime.ApplicationStopped.Register(OnStopped);
@@ -29,7 +31,7 @@ public class EwsdParserHostedService : IHostedService
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                await Task.Delay(2000, cancellationToken);
+                await Task.Delay(TimeSpan.FromSeconds(_settings.ParsingDelayInSeconds), cancellationToken);
                 _logger.LogInformation($"Parsing ewsd files ...  ({_dateTimeContext.Get()})");
             }
         }
