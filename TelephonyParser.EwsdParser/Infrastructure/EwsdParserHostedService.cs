@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TelephonyParser.EwsdParser.BusinessLogic;
+using TelephonyParser.EwsdParser.BusinessLogic.FilesProcessLogics;
 
 namespace TelephonyParser.EwsdParser.Infrastructure;
 
@@ -9,15 +11,13 @@ namespace TelephonyParser.EwsdParser.Infrastructure;
 public class EwsdParserHostedService : IHostedService
 {
     private readonly ILogger<EwsdParserHostedService> _logger;
-    private readonly IDateTimeContext _dateTimeContext;
-    private readonly EwsdSettings _settings;
+    private readonly IEwsdFilesProcessLogic _filesProcessLogic;
 
-    public EwsdParserHostedService(ILogger<EwsdParserHostedService> logger, IDateTimeContext dateTimeContext, 
-        IHostApplicationLifetime appLifetime, EwsdSettings settings)
+    public EwsdParserHostedService(ILogger<EwsdParserHostedService> logger,
+        IHostApplicationLifetime appLifetime, IEwsdFilesProcessLogic filesProcessLogic)
     {
         _logger = logger;
-        _dateTimeContext = dateTimeContext;
-        _settings = settings;
+        _filesProcessLogic = filesProcessLogic;
 
         appLifetime.ApplicationStopping.Register(OnStopping);
         appLifetime.ApplicationStopped.Register(OnStopped);
@@ -29,11 +29,7 @@ public class EwsdParserHostedService : IHostedService
 
         try
         {
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                await Task.Delay(TimeSpan.FromSeconds(_settings.ParsingDelayInSeconds), cancellationToken);
-                _logger.LogInformation($"Parsing ewsd files ...  ({_dateTimeContext.Get()})");
-            }
+            await _filesProcessLogic.ProcessFilesAsync(cancellationToken);
         }
         catch (TaskCanceledException e)
         {

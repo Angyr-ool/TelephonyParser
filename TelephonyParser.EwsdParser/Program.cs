@@ -1,6 +1,9 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using TelephonyParser.EwsdParser.BusinessLogic;
+using TelephonyParser.EwsdParser.BusinessLogic.FileParseLogics;
+using TelephonyParser.EwsdParser.BusinessLogic.FilesProcessLogics;
 using TelephonyParser.EwsdParser.Infrastructure;
 
 var environmentVariableName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
@@ -24,6 +27,8 @@ hostAppBuilder.ConfigureContainer(ewsdServiceProviderFactory, builder =>
 {
     builder.RegisterType<EwsdParserHostedService>().As<IHostedService>().SingleInstance();
     builder.RegisterType<DateTimeContext>().As<IDateTimeContext>().SingleInstance();
+    builder.RegisterType<EwsdFilesProcessLogic>().As<IEwsdFilesProcessLogic>().SingleInstance();
+    builder.RegisterType<EwsdFileParsingLogic>().As<IEwsdFileParsingLogic>().SingleInstance();
     builder.Register(
             _ => configurationRoot.GetSection(nameof(EwsdSettings)).Get<EwsdSettings>()!)
         .SingleInstance();
