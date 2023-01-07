@@ -2,9 +2,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using TelephonyParser.EwsdModel;
+using TelephonyParser.EwsdParser.BusinessLogic;
 using TelephonyParser.EwsdParser.BusinessLogic.FileParseLogics;
+using TelephonyParser.EwsdParser.BusinessLogic.FilesProcessLogics;
 
-namespace TelephonyParser.EwsdParser.BusinessLogic.FilesProcessLogics.Tests;
+namespace TelephonyParser.EwsdParser.Tests.BusinessLogic.FilesProcessLogics;
 
 [TestClass()]
 public class EwsdFilesProcessLogicTests
@@ -48,7 +50,7 @@ public class EwsdFilesProcessLogicTests
         mock
             .Mock<IEwsdFileParsingLogic>()
             .Setup(x => x.ParseFileAsync(It.IsAny<EwsdFileTask>(), It.IsAny<CancellationToken>()))
-            .Returns((EwsdFileTask ewsdFileTask, CancellationToken cancellationToken) =>
+            .Returns((EwsdFileTask ewsdFileTask, CancellationToken _) =>
             {
                 ewsdFileTask.Status = EwsdFileProcessStatus.Processed;
 
@@ -90,9 +92,7 @@ public class EwsdFilesProcessLogicTests
         // Assert
         Assert.AreEqual(1, _ewsdFileTaskListProcessed?.Count);
 
-        /// <summary>
-        /// Отменить обработку ewsd файлов
-        /// </summary>
+        // Отменить обработку ewsd файлов
         async void CancelProcessFilesAsync()
         {
             await Task.Delay(2000);
@@ -136,7 +136,7 @@ public class EwsdFilesProcessLogicTests
         mock
             .Mock<IEwsdFileParsingLogic>()
             .Setup(x => x.ParseFileAsync(It.IsAny<EwsdFileTask>(), It.IsAny<CancellationToken>()))
-            .Returns((EwsdFileTask ewsdFileTask, CancellationToken cancellationToken) =>
+            .Returns((EwsdFileTask ewsdFileTask, CancellationToken _) =>
             {
                 if (ewsdFileTask.File?.Name == "validFileName") ewsdFileTask.Status = EwsdFileProcessStatus.Processed;
                 if (ewsdFileTask.File?.Name == "inValidFileName") ewsdFileTask.Status = EwsdFileProcessStatus.Error;
@@ -147,15 +147,7 @@ public class EwsdFilesProcessLogicTests
         mock
             .Mock<IProcessEwsdFileTaskManager>()
             .Setup(x => x.GetNew())
-            .Returns(() =>
-            {
-                if (_ewsdFileTaskListNew.TryDequeue(out var ewsdFileTask))
-                {
-                    return ewsdFileTask;
-                }
-
-                return null;
-            });
+            .Returns(() => _ewsdFileTaskListNew.TryDequeue(out var ewsdFileTask) ? ewsdFileTask : null);
 
         mock
             .Mock<IProcessEwsdFileTaskManager>()
@@ -176,14 +168,12 @@ public class EwsdFilesProcessLogicTests
         }
         catch (TaskCanceledException) { }
 
-        // Assert - assert on the mock
+        // Assert
         Assert.AreEqual(2, _ewsdFileTaskListProcessed?.Count);
         Assert.AreEqual(EwsdFileProcessStatus.Processed, _ewsdFileTaskListProcessed?.First().Status);
         Assert.AreEqual(EwsdFileProcessStatus.Error, _ewsdFileTaskListProcessed?.Last().Status);
-
-        /// <summary>
-        /// Отменить обработку ewsd файлов
-        /// </summary>
+        
+        //Отменить обработку ewsd файлов
         async void CancelProcessFilesAsync()
         {
             await Task.Delay(3000);

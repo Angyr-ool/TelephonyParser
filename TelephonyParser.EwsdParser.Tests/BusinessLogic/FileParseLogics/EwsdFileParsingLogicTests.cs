@@ -2,9 +2,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using TelephonyParser.EwsdModel;
+using TelephonyParser.EwsdParser.BusinessLogic;
+using TelephonyParser.EwsdParser.BusinessLogic.FileParseLogics;
 using TelephonyParser.EwsdParser.Infrastructure;
 
-namespace TelephonyParser.EwsdParser.BusinessLogic.FileParseLogics.Tests;
+namespace TelephonyParser.EwsdParser.Tests.BusinessLogic.FileParseLogics;
 
 [TestClass()]
 public class EwsdFileParsingLogicTests
@@ -35,7 +37,7 @@ public class EwsdFileParsingLogicTests
             },
         };
 
-        _savedRecords = new();
+        _savedRecords = new List<EwsdRecord>();
     }
 
     /// <summary>
@@ -49,16 +51,12 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileExists(It.IsAny<string?>()))
-            .Returns((string? path) =>
-            {
-                // файл существует в файловой системе
-                return true;
-            });
+            .Returns((string? _) => true); // файл существует в файловой системе
 
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileReadAllBytes(It.IsAny<string?>()))
-            .Returns((string? path) =>
+            .Returns((string? _) =>
             {
                 // файл содержит хотя бы 1 байт
                 return new byte[] { 1 };
@@ -67,19 +65,19 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IEwsdFileBytesSplitLogic>()
             .Setup(x => x.SplitBytes(It.IsAny<byte[]>()))
-            .Returns((byte[] bytes) =>
+            .Returns((byte[] _) =>
             {
                 // из байтов файла можно сформировать хотя бы одну запись (в виде байтов)
-                return new byte[][]{ new byte[] { 1 } };
+                return new[] { new byte[] { 1 } };
             });
 
         mock
             .Mock<IEwsdRecordsBuildService>()
             .Setup(x => x.BuildRecords(It.IsAny<byte[][]>()))
-            .Returns((byte[][] fileBytes) =>
+            .Returns((byte[][] _) =>
             {
                 // из записей в виде байтов можно сформировать хотя бы один экземпляр EwsdRecord (запись)
-                return new EwsdRecord[] { new EwsdRecord() };
+                return new[] { new EwsdRecord() };
             });
 
         mock
@@ -119,16 +117,12 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileExists(It.IsAny<string?>()))
-            .Returns((string? path) =>
-            {
-                // файл существует в файловой системе (выполнение кода до этого метода не дойдет)
-                return true;
-            });
+            .Returns((string? _) => true); // файл существует в файловой системе (выполнение кода до этого метода не дойдет)
 
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileReadAllBytes(It.IsAny<string?>()))
-            .Returns((string? path) =>
+            .Returns((string? _) =>
             {
                 return new byte[] { 1 };
             });
@@ -136,17 +130,17 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IEwsdFileBytesSplitLogic>()
             .Setup(x => x.SplitBytes(It.IsAny<byte[]>()))
-            .Returns((byte[] bytes) =>
+            .Returns((byte[] _) =>
             {
-                return new byte[][] { new byte[] { 1 } };
+                return new[] { new byte[] { 1 } };
             });
 
         mock
             .Mock<IEwsdRecordsBuildService>()
             .Setup(x => x.BuildRecords(It.IsAny<byte[][]>()))
-            .Returns((byte[][] fileBytes) =>
+            .Returns((byte[][] _) =>
             {
-                return new EwsdRecord[] { new EwsdRecord() };
+                return new[] { new EwsdRecord() };
             });
 
         mock
@@ -179,16 +173,12 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileExists(It.IsAny<string?>()))
-            .Returns((string? path) =>
-            {
-                // файла не существует в файловой системе
-                return false;
-            });
+            .Returns((string? _) => false); // файла не существует в файловой системе
 
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileReadAllBytes(It.IsAny<string?>()))
-            .Returns((string? path) =>
+            .Returns((string? _) =>
             {
                 // файл содержит хотя бы 1 байт (выполнение кода до этого метода не дойдет)
                 return new byte[] { 1 };
@@ -197,17 +187,17 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IEwsdFileBytesSplitLogic>()
             .Setup(x => x.SplitBytes(It.IsAny<byte[]>()))
-            .Returns((byte[] bytes) =>
+            .Returns((byte[] _) =>
             {
-                return new byte[][] { new byte[] { 1 } };
+                return new[] { new byte[] { 1 } };
             });
 
         mock
             .Mock<IEwsdRecordsBuildService>()
             .Setup(x => x.BuildRecords(It.IsAny<byte[][]>()))
-            .Returns((byte[][] fileBytes) =>
+            .Returns((byte[][] _) =>
             {
-                return new EwsdRecord[] { new EwsdRecord() };
+                return new[] { new EwsdRecord() };
             });
 
         mock
@@ -240,36 +230,28 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileExists(It.IsAny<string?>()))
-            .Returns((string? path) =>
-            {
-                // файл существует в файловой системе
-                return true;
-            });
+            .Returns((string? _) => true); // файл существует в файловой системе
 
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileReadAllBytes(It.IsAny<string?>()))
-            .Returns((string? path) =>
-            {
-                // файл не содержит байтов
-                return Array.Empty<byte>();
-            });
+            .Returns((string? _) => Array.Empty<byte>()); // файл не содержит байтов
 
         mock
             .Mock<IEwsdFileBytesSplitLogic>()
             .Setup(x => x.SplitBytes(It.IsAny<byte[]>()))
-            .Returns((byte[] bytes) =>
+            .Returns((byte[] _) =>
             {
                 // из байтов файла можно сформировать хотя бы одну запись (в виде байтов) (выполнение кода до этого метода не дойдет)
-                return new byte[][] { new byte[] { 1 } };
+                return new[] { new byte[] { 1 } };
             });
 
         mock
             .Mock<IEwsdRecordsBuildService>()
             .Setup(x => x.BuildRecords(It.IsAny<byte[][]>()))
-            .Returns((byte[][] fileBytes) =>
+            .Returns((byte[][] _) =>
             {
-                return new EwsdRecord[] { new EwsdRecord() };
+                return new[] { new EwsdRecord() };
             });
 
         mock
@@ -302,16 +284,12 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileExists(It.IsAny<string?>()))
-            .Returns((string? path) =>
-            {
-                // файл существует в файловой системе
-                return true;
-            });
+            .Returns((string? _) => true); // файл существует в файловой системе
 
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileReadAllBytes(It.IsAny<string?>()))
-            .Returns((string? path) =>
+            .Returns((string? _) =>
             {
                 // файл содержит хотя бы 1 байт
                 return new byte[] { 1 };
@@ -320,19 +298,15 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IEwsdFileBytesSplitLogic>()
             .Setup(x => x.SplitBytes(It.IsAny<byte[]>()))
-            .Returns((byte[] bytes) =>
-            {
-                // из байтов файла невозможно сформировать хотя бы одну запись (в виде байтов)
-                return Array.Empty<byte[]>(); // тестируемое поведение
-            });
+            .Returns((byte[] _) => Array.Empty<byte[]>()); // из байтов файла невозможно сформировать хотя бы одну запись (в виде байтов)
 
         mock
             .Mock<IEwsdRecordsBuildService>()
             .Setup(x => x.BuildRecords(It.IsAny<byte[][]>()))
-            .Returns((byte[][] fileBytes) =>
+            .Returns((byte[][] _) =>
             {
                 // из записей в виде байтов можно сформировать хотя бы один экземпляр EwsdRecord (запись) (выполнение кода до этого метода не дойдет)
-                return new EwsdRecord[] { new EwsdRecord() };
+                return new[] { new EwsdRecord() };
             });
 
         mock
@@ -365,16 +339,12 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileExists(It.IsAny<string?>()))
-            .Returns((string? path) =>
-            {
-                // файл существует в файловой системе
-                return true;
-            });
+            .Returns((string? _) => true); // файл существует в файловой системе
 
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileReadAllBytes(It.IsAny<string?>()))
-            .Returns((string? path) =>
+            .Returns((string? _) =>
             {
                 // файл содержит хотя бы 1 байт
                 return new byte[] { 1 };
@@ -383,20 +353,16 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IEwsdFileBytesSplitLogic>()
             .Setup(x => x.SplitBytes(It.IsAny<byte[]>()))
-            .Returns((byte[] bytes) =>
+            .Returns((byte[] _) =>
             {
                 // из байтов файла можно сформировать хотя бы одну запись (в виде байтов)
-                return new byte[][] { new byte[] { 1 } };
+                return new[] { new byte[] { 1 } };
             });
 
         mock
             .Mock<IEwsdRecordsBuildService>()
             .Setup(x => x.BuildRecords(It.IsAny<byte[][]>()))
-            .Returns((byte[][] fileBytes) =>
-            {
-                // из записей в виде байтов невозможно сформировать хотя бы один экземпляр EwsdRecord (запись)
-                return Array.Empty<EwsdRecord>();
-            });
+            .Returns((byte[][] _) => Array.Empty<EwsdRecord>()); // из записей в виде байтов невозможно сформировать хотя бы один экземпляр EwsdRecord (запись)
 
         mock
            .Mock<IEwsdRecordService>()
@@ -430,16 +396,12 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileExists(It.IsAny<string?>()))
-            .Returns((string? path) =>
-            {
-                // файл существует в файловой системе
-                return true;
-            });
+            .Returns((string? _) => true); // файл существует в файловой системе
 
         mock
             .Mock<IFileSystem>()
             .Setup(x => x.FileReadAllBytes(It.IsAny<string?>()))
-            .Returns((string? path) =>
+            .Returns((string? _) =>
             {
                 // файл содержит хотя бы 1 байт
                 return new byte[] { 1 };
@@ -448,29 +410,25 @@ public class EwsdFileParsingLogicTests
         mock
             .Mock<IEwsdFileBytesSplitLogic>()
             .Setup(x => x.SplitBytes(It.IsAny<byte[]>()))
-            .Returns((byte[] bytes) =>
+            .Returns((byte[] _) =>
             {
                 // из байтов файла можно сформировать хотя бы одну запись (в виде байтов)
-                return new byte[][] { new byte[] { 1 } };
+                return new[] { new byte[] { 1 } };
             });
 
         mock
             .Mock<IEwsdRecordsBuildService>()
             .Setup(x => x.BuildRecords(It.IsAny<byte[][]>()))
-            .Returns((byte[][] fileBytes) =>
+            .Returns((byte[][] _) =>
             {
                 // из записей в виде байтов можно сформировать хотя бы один экземпляр EwsdRecord (запись)
-                return new EwsdRecord[] { new EwsdRecord() };
+                return new[] { new EwsdRecord() };
             });
 
         mock
            .Mock<IEwsdRecordService>()
            .Setup(x => x.Save(It.IsAny<EwsdRecord[]>()))
-           .Callback((EwsdRecord[] records) => 
-           {
-               // во время сохранения записей возникает исключение
-               throw new InvalidOperationException("save records is not working");
-           });
+           .Callback((EwsdRecord[] _) => throw new InvalidOperationException("save records is not working"));// во время сохранения записей возникает исключение
 
         var sut = mock.Create<EwsdFileParsingLogic>();
 
