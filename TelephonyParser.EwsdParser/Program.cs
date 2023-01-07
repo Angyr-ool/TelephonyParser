@@ -29,6 +29,9 @@ hostAppBuilder.ConfigureContainer(ewsdServiceProviderFactory, builder =>
     builder.RegisterType<DateTimeContext>().As<IDateTimeContext>().SingleInstance();
     builder.RegisterType<EwsdFilesProcessLogic>().As<IEwsdFilesProcessLogic>().SingleInstance();
     builder.RegisterType<EwsdFileParsingLogic>().As<IEwsdFileParsingLogic>().SingleInstance();
+    builder.RegisterType<ProcessEwsdFileTaskManager>().As<IProcessEwsdFileTaskManager>().SingleInstance();
+
+    // подключение файла appsettings
     builder.Register(
             _ => configurationRoot.GetSection(nameof(EwsdSettings)).Get<EwsdSettings>()!)
         .SingleInstance();

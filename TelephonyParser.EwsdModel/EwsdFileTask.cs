@@ -5,6 +5,7 @@
 /// </summary>
 public class EwsdFileTask
 {
+    public long? Id { get; set; }
     public EwsdFile? File { get; set; }
     public EwsdFileProcessStatus? Status { get; set; }
     public string? Message { get; set; }

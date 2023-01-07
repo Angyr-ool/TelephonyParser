@@ -7,5 +7,6 @@ namespace TelephonyParser.EwsdParser.BusinessLogic.FileParseLogics;
 /// </summary>
 public interface IEwsdFileParsingLogic
 {
-    Task<EwsdFileTask> ParseFileAsync(EwsdFileTask ewsdFileTask, CancellationToken cancellationToken);
+    void ParseFile(EwsdFileTask ewsdFileTask);
+    Task ParseFileAsync(EwsdFileTask ewsdFileTask, CancellationToken cancellationToken);
 }

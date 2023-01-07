@@ -43,30 +43,30 @@ public class EwsdFilesProcessLogic : IEwsdFilesProcessLogic
             }
             
             // обработка задачи
-            var parsedFileProcessTask = await _fileParsingLogic.ParseFileAsync(fileProcessTask, cancellationToken);
+            await _fileParsingLogic.ParseFileAsync(fileProcessTask, cancellationToken);
 
             // лог после обработки задачи
-            switch (parsedFileProcessTask.Status)
+            switch (fileProcessTask.Status)
             {
                 case EwsdFileProcessStatus.Processed:
-                    _logger.LogInformation($"Файл '{parsedFileProcessTask.File?.Path}' успешно обработан");
+                    _logger.LogInformation($"Файл '{fileProcessTask.File?.Path}' успешно обработан");
                     break;
                 case EwsdFileProcessStatus.New:
                 case EwsdFileProcessStatus.OnProcess:
-                    _logger.LogCritical($"Недопустимый статус после обработки '{parsedFileProcessTask.Status}'. " +
-                                        $"Файл '{parsedFileProcessTask.File?.Path}'");
+                    _logger.LogCritical($"Недопустимый статус после обработки '{fileProcessTask.Status}'. " +
+                                        $"Файл '{fileProcessTask.File?.Path}'");
                     break;
                 case EwsdFileProcessStatus.Error:
-                    _logger.LogError($"Ошибка во время обработки файла '{parsedFileProcessTask.File?.Path}'");
+                    _logger.LogError($"Ошибка во время обработки файла '{fileProcessTask.File?.Path}'");
                     break;
                 default:
-                    _logger.LogCritical($"Незарегистрированный статус после обработки '{parsedFileProcessTask.Status}'. " +
-                                        $"Файл '{parsedFileProcessTask.File?.Path}'");
+                    _logger.LogCritical($"Незарегистрированный статус после обработки '{fileProcessTask.Status}'. " +
+                                        $"Файл '{fileProcessTask.File?.Path}'");
                     break;
             }
             
             // сохраняем задачу
-            _processFileTaskManager.Save(parsedFileProcessTask);
+            _processFileTaskManager.Save(fileProcessTask);
             
             // задержка после обработки каждого файла
             await Task.Delay(TimeSpan.FromSeconds(_settings.ParsingDelayInSeconds), cancellationToken);
