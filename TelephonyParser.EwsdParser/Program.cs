@@ -1,9 +1,11 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using TelephonyParser.EwsdParser.BusinessLogic;
-using TelephonyParser.EwsdParser.BusinessLogic.FileParseLogics;
-using TelephonyParser.EwsdParser.BusinessLogic.FilesProcessLogics;
+using TelephonyParser.EwsdModel.BusinessLogic.ExternalResourceServices;
+using TelephonyParser.EwsdModel.BusinessLogic.ParseFileLogics;
+using TelephonyParser.EwsdModel.BusinessLogic.ProcessFilesLogics;
+using TelephonyParser.EwsdModel.DateTimeServices;
+using TelephonyParser.EwsdModel.Settings;
 using TelephonyParser.EwsdParser.Infrastructure;
 
 var environmentVariableName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
@@ -27,9 +29,10 @@ hostAppBuilder.ConfigureContainer(ewsdServiceProviderFactory, builder =>
 {
     builder.RegisterType<EwsdParserHostedService>().As<IHostedService>().SingleInstance();
     builder.RegisterType<DateTimeContext>().As<IDateTimeContext>().SingleInstance();
-    builder.RegisterType<EwsdFilesProcessLogic>().As<IEwsdFilesProcessLogic>().SingleInstance();
-    builder.RegisterType<EwsdFileParsingLogic>().As<IEwsdFileParsingLogic>().SingleInstance();
-    builder.RegisterType<ProcessEwsdFileTaskManager>().As<IProcessEwsdFileTaskManager>().SingleInstance();
+    builder.RegisterType<ProcessEwsdFilesLogic>().As<IProcessEwsdFilesLogic>().SingleInstance();
+    builder.RegisterType<ParseEwsdFileLogic>().As<IParseEwsdFileLogic>().SingleInstance();
+    builder.RegisterType<EwsdExternalResourceService>().As<IEwsdExternalResourceService>().SingleInstance();
+    //builder.RegisterType<EwsdSettings>().As<IEwsdSettings>().SingleInstance();
 
     // подключение файла appsettings
     builder.Register(

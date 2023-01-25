@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using TelephonyParser.EwsdParser.BusinessLogic;
-using TelephonyParser.EwsdParser.BusinessLogic.FilesProcessLogics;
+using TelephonyParser.EwsdModel.BusinessLogic.ProcessFilesLogics;
 
 namespace TelephonyParser.EwsdParser.Infrastructure;
 
@@ -11,16 +10,39 @@ namespace TelephonyParser.EwsdParser.Infrastructure;
 public class EwsdParserHostedService : IHostedService
 {
     private readonly ILogger<EwsdParserHostedService> _logger;
-    private readonly IEwsdFilesProcessLogic _filesProcessLogic;
+    private readonly IProcessEwsdFilesLogic _processFilesLogic;
+    private readonly ILogger<IProcessEwsdFilesLogic> _processFilesLogicLogger;
 
     public EwsdParserHostedService(ILogger<EwsdParserHostedService> logger,
-        IHostApplicationLifetime appLifetime, IEwsdFilesProcessLogic filesProcessLogic)
+        IHostApplicationLifetime appLifetime, IProcessEwsdFilesLogic filesProcessLogic, 
+        ILogger<IProcessEwsdFilesLogic> processFilesLogicLogger)
     {
         _logger = logger;
-        _filesProcessLogic = filesProcessLogic;
+        _processFilesLogic = filesProcessLogic;
+        _processFilesLogicLogger = processFilesLogicLogger;
+
+        _processFilesLogic.ProcessFilesNotify += _processFilesLogic_ProcessFilesNotify;
 
         appLifetime.ApplicationStopping.Register(OnStopping);
         appLifetime.ApplicationStopped.Register(OnStopped);
+    }
+
+    private void _processFilesLogic_ProcessFilesNotify(ProcessFilesEventArgs eventArgs)
+    {
+        if (eventArgs.NotifyType == ProcessFilesNotifyType.Information)
+        {
+            _processFilesLogicLogger.LogInformation(eventArgs.Message);
+        }
+
+        if (eventArgs.NotifyType == ProcessFilesNotifyType.Critical)
+        {
+            _processFilesLogicLogger.LogCritical(eventArgs.Message);
+        }
+
+        if (eventArgs.NotifyType == ProcessFilesNotifyType.Error)
+        {
+            _processFilesLogicLogger.LogError(eventArgs.Message);
+        }
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -29,7 +51,7 @@ public class EwsdParserHostedService : IHostedService
 
         try
         {
-            await _filesProcessLogic.ProcessFilesAsync(cancellationToken);
+            await _processFilesLogic.ProcessFilesAsync(cancellationToken);
         }
         catch (TaskCanceledException e)
         {
