@@ -20,4 +20,8 @@
     <ProjectReference Include="..\TelephonyParser.EwsdModel\TelephonyParser.EwsdModel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BusinessLogic\SplitFileBytesLogics\" />
+  </ItemGroup>
+
 </Project>

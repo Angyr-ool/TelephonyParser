@@ -2,22 +2,9 @@
 
 namespace TelephonyParser.EwsdModel.Tests.BusinessLogic.Models;
 
-public class FakeFixedPart : IEwsdPackage
+public class FakeFixedPart : IRecordPackage
 {
-    public byte StartByte => throw new NotImplementedException();
+    public byte Number => throw new NotImplementedException();
 
-    public object Clone()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Dispose()
-    {
-        throw new NotImplementedException();
-    }
-
-    public byte GetLength(in byte[] record, int startBytePositionInRecord)
-    {
-        throw new NotImplementedException();
-    }
+    public int Length => throw new NotImplementedException();
 }

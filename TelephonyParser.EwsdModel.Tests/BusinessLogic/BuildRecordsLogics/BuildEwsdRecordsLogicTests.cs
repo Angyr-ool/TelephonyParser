@@ -29,14 +29,14 @@ public class BuildEwsdRecordsLogicTests
         using var mock = AutoMock.GetLoose();
         // Arrange - configure the mock
         mock
-            .Mock<IBuildEwsdPackagesLogic>()
+            .Mock<IBuildPackagesLogic>()
             .Setup(x => x.Build(It.IsAny<byte[]>()))
-            .Returns((byte[] _) => new IEwsdPackage[] { new FakeFixedPart() });
+            .Returns((byte[] _) => new IRecordPackage[] { new FakeFixedPart() });
 
         mock
-            .Mock<IBuildEwsdRecordLogic>()
-            .Setup(x => x.Build(It.IsAny<IEwsdPackage[]>()))
-            .Returns((IEwsdPackage[] _) => new FakeEwsdRecord());
+            .Mock<IBuildRecordLogic>()
+            .Setup(x => x.Build(It.IsAny<IRecordPackage[]>()))
+            .Returns((IRecordPackage[] _) => new FakeEwsdRecord());
 
         var sut = mock.Create<BuildEwsdRecordsLogic>();
 

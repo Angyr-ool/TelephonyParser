@@ -22,7 +22,7 @@ public class ParseEwsdFileLogicTests
     /// <summary>
     /// Список сохраненных записей EwsdRecord
     /// </summary>
-    private List<IEwsdRecord>? _savedRecords;
+    private List<IRecord>? _savedRecords;
 
     /// <summary>
     /// Этот метод запускается перед вызовом каждого тестового метода
@@ -39,7 +39,7 @@ public class ParseEwsdFileLogicTests
             Status = EwsdFileTaskStatus.OnProcess
         };
 
-        _savedRecords = new List<IEwsdRecord>();
+        _savedRecords = new List<IRecord>();
     }
 
     [TestMethod()]
@@ -81,8 +81,8 @@ public class ParseEwsdFileLogicTests
 
         mock
            .Mock<IEwsdExternalResourceService>()
-           .Setup(x => x.Save(It.IsAny<IEwsdRecord[]>()))
-           .Callback((IEwsdRecord[] records) =>
+           .Setup(x => x.Save(It.IsAny<IRecord[]>()))
+           .Callback((IRecord[] records) =>
            {
                // имитация сохранения записей на внешний источник
                _savedRecords?.AddRange(records);

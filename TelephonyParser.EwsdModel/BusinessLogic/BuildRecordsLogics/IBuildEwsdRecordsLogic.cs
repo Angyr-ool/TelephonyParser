@@ -4,5 +4,5 @@ namespace TelephonyParser.EwsdModel.BusinessLogic.BuildRecordsLogics;
 
 public interface IBuildEwsdRecordsLogic
 {
-    IEwsdRecord[] BuildRecords(byte[][] fileBytes);
+    IRecord[] BuildRecords(byte[][] fileBytes);
 }

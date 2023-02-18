@@ -40,7 +40,7 @@ internal class EwsdExternalResourceService : IEwsdExternalResourceService
         
     }
 
-    public void Save(IEwsdRecord[] records)
+    public void Save(IRecord[] records)
     {
         
     }

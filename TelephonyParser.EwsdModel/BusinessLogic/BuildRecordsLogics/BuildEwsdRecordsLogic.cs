@@ -6,18 +6,18 @@ namespace TelephonyParser.EwsdModel.BusinessLogic.BuildRecordsLogics;
 
 public class BuildEwsdRecordsLogic : IBuildEwsdRecordsLogic
 {
-    private readonly IBuildEwsdPackagesLogic _packagesBuilder;
-    private readonly IBuildEwsdRecordLogic _recordBuildService;
+    private readonly IBuildPackagesLogic _packagesBuilder;
+    private readonly IBuildRecordLogic _recordBuildService;
 
-    public BuildEwsdRecordsLogic(IBuildEwsdPackagesLogic packagesBuilder, IBuildEwsdRecordLogic recordBuildService)
+    public BuildEwsdRecordsLogic(IBuildPackagesLogic packagesBuilder, IBuildRecordLogic recordBuildService)
     {
         _packagesBuilder = packagesBuilder;
         _recordBuildService = recordBuildService;
     }
 
-    public IEwsdRecord[] BuildRecords(byte[][] fileBytes)
+    public IRecord[] BuildRecords(byte[][] fileBytes)
     {
-        var records = new List<IEwsdRecord>();
+        var records = new List<IRecord>();
 
         foreach (var recordBytes in fileBytes)
         {

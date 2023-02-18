@@ -5,7 +5,7 @@ namespace TelephonyParser.EwsdModel.BusinessLogic.BuildRecordLogics;
 /// <summary>
 /// Логика построения записи ewsd из пакетов ewsd
 /// </summary>
-public interface IBuildEwsdRecordLogic
+public interface IBuildRecordLogic
 {
-    IEwsdRecord? Build(IEwsdPackage[] packages);
+    IRecord? Build(IRecordPackage[] packages);
 }

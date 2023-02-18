@@ -2,7 +2,7 @@
 
 namespace TelephonyParser.EwsdModel.BusinessLogic.BuildPackagesLogics;
 
-public interface IBuildEwsdPackagesLogic
+public interface IBuildPackagesLogic
 {
-    IEwsdPackage[] Build(byte[] bytes);
+    IRecordPackage[] Build(byte[] bytes);
 }

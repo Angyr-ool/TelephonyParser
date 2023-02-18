@@ -20,5 +20,5 @@ public interface IEwsdExternalResourceService
 
     Task SaveAsync(IEwsdFileTask ewsdFileTask, CancellationToken cancellationToken);
 
-    void Save(IEwsdRecord[] records);
+    void Save(IRecord[] records);
 }

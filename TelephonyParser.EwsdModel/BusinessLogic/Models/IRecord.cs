@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace TelephonyParser.EwsdModel.BusinessLogic.Models;
 
-public interface IEwsdRecord
+public interface IRecord
 {
 }

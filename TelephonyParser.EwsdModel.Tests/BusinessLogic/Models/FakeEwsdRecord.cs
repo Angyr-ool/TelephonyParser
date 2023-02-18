@@ -7,6 +7,6 @@ using TelephonyParser.EwsdModel.BusinessLogic.Models;
 
 namespace TelephonyParser.EwsdModel.Tests.BusinessLogic.Models;
 
-public class FakeEwsdRecord : IEwsdRecord
+public class FakeEwsdRecord : IRecord
 {
 }

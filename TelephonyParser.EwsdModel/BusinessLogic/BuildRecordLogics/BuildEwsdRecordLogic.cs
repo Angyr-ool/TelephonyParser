@@ -7,9 +7,9 @@ using TelephonyParser.EwsdModel.BusinessLogic.Models;
 
 namespace TelephonyParser.EwsdModel.BusinessLogic.BuildRecordLogics;
 
-public class BuildEwsdRecordLogic : IBuildEwsdRecordLogic
+public class BuildRecordLogic : IBuildRecordLogic
 {
-    public IEwsdRecord? Build(IEwsdPackage[] packages)
+    public IRecord? Build(IRecordPackage[] packages)
     {
         throw new NotImplementedException();
     }
